@@ -1,8 +1,6 @@
 --[[
 	Auctioneer Advanced - Search UI - Searcher MillingMats
-	Version: 5.4.4157 (WallabyII)
-	Revision: $Id: SearcherMillingMats.lua 3953 2009-01-05 11:20:56Z brykrys $
-	URL: http://auctioneeraddon.com/
+	TODO add revision and ID
 
 	This is a plugin module for the SearchUI that assists in searching by refined paramaters
 
@@ -401,4 +399,5 @@ function lib.Search(item)
 	return false, "Not enough profit"
 end
 
-AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.4/Auc-Util-SearchUI/SearcherMillingMats.lua $", "$Rev: 3953 $")
+-- TOD0 determine where this will be going
+--AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.4/Auc-Util-SearchUI/SearcherMillingMats.lua $", "$Rev: 3953 $")
