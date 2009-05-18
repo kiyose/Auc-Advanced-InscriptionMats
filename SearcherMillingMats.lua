@@ -25,6 +25,9 @@
 		You have an implicit license to use this AddOn with these facilities
 		since that is its designated purpose as per:
 		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
+	
+	TODO: The market valuation and percentage calculations have not been validated. 
+	    use at your own descretion.
 --]]
 -- Create a new instance of our lib with our parent
 local lib, parent, private = AucSearchUI.NewSearcher("MillingMats")
