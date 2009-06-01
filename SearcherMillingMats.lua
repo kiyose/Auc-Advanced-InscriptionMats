@@ -1,33 +1,33 @@
 --[[
-	Auctioneer Advanced - Search UI - Searcher MillingMats
-	TODO add revision and ID
+Auctioneer Advanced - Search UI - Searcher MillingMats
+TODO add revision and ID
 
-	This is a plugin module for the SearchUI that assists in searching by refined paramaters
+This is a plugin module for the SearchUI that assists in searching by refined paramaters
 
-	License:
-		This program is free software; you can redistribute it and/or
-		modify it under the terms of the GNU General Public License
-		as published by the Free Software Foundation; either version 2
-		of the License, or (at your option) any later version.
+License:
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
 
-		This program is distributed in the hope that it will be useful,
-		but WITHOUT ANY WARRANTY; without even the implied warranty of
-		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-		GNU General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-		You should have received a copy of the GNU General Public License
-		along with this program(see GPL.txt); if not, write to the Free Software
-		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+You should have received a copy of the GNU General Public License
+along with this program(see GPL.txt); if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-	Note:
-		This AddOn's source code is specifically designed to work with
-		World of Warcraft's interpreted AddOn system.
-		You have an implicit license to use this AddOn with these facilities
-		since that is its designated purpose as per:
-		http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
-	
-	TODO: The market valuation and percentage calculations have not been validated. 
-	    use at your own descretion.
+Note:
+This AddOn's source code is specifically designed to work with
+World of Warcraft's interpreted AddOn system.
+You have an implicit license to use this AddOn with these facilities
+since that is its designated purpose as per:
+http://www.fsf.org/licensing/licenses/gpl-faq.html#InterpreterIncompat
+
+TODO: The market valuation and percentage calculations have not been validated. 
+use at your own descretion.
 --]]
 -- Create a new instance of our lib with our parent
 local lib, parent, private = AucSearchUI.NewSearcher("MillingMats")
@@ -111,84 +111,173 @@ local HERB_DEADNETTLE = 37921
 local HERB_FIRESEED = 39969					-- milling added 3.0.8
 local HERB_FIRELEAF = 39970					-- milling added 3.0.8
 
+local MOONGLOW_INK   = 39469 --moonglow ink
+local MIDNIGHT_INK   = 39774 --midnight ink
+local HUNTERS_INK    = 43115 --hunter's ink
+local LIONS_INK      = 43116 --lion's ink
+local DAWNSTAR_INK   = 43117 --dawnstar ink
+local JADEFIRE_INK   = 43118 --jadefire ink
+local ROYAL_INK      = 43119 --royal ink
+local CELESTIAL_INK  = 43120 --celestial ink
+local FIERY_INK      = 43121 --fiery ink
+local SHIMMERING_INK = 43122 --shimmering ink
+local INK_OF_THE_SKY = 43123 --ink of the sky
+local ETHEREAL_INK   = 43124 --ethereal ink
+local DARKFLAME_INK  = 43125 --darkflame ink
+local INK_OF_THE_SEA = 43126 --ink of the sea
+local SNOWFALL_INK   = 43127 --snowfall ink
+
+local COMMON_INK = 2 -- two pigments to make this ink
+local RARE_INK   = 1 -- one pigment to make this ink
+
+local inksToPigments = {
+  [MOONGLOW_INK]   = ALABASTER_PIGMENT, --moonglow ink (alabaster pigment)
+  [MIDNIGHT_INK]   = DUSKY_PIGMENT,     --midnight ink (dusky pigment)
+  [HUNTERS_INK]    = VERDANT_PIGMENT,   --hunter's ink (verdant pigment)
+  [LIONS_INK]      = GOLDEN_PIGMENT,    --lion's ink (golden pigment)
+  [DAWNSTAR_INK]   = BURNT_PIGMENT,     --dawnstar ink (burnt pigment)
+  [JADEFIRE_INK]   = EMERALD_PIGMENT,   --jadefire ink (emerald pigment)
+  [ROYAL_INK]      = INDIGO_PIGMENT,    --royal ink (indigo pigment)
+  [CELESTIAL_INK]  = VIOLET_PIGMENT,    --celestial ink (violet pigment)
+  [FIERY_INK]      = RUBY_PIGMENT,      --fiery ink (Ruby Pigment)
+  [SHIMMERING_INK] = SILVERY_PIGMENT,   --shimmering ink (silvery pigment)
+  [INK_OF_THE_SKY] = SAPPHIRE_PIGMENT,  --ink of the sky (Saphire Pigment)
+  [ETHEREAL_INK]   = NETHER_PIGMENT,    --ethereal ink (nether pigment)
+  [DARKFLAME_INK]  = EBON_PIGMENT,      --darkflame ink (ebon pigment)
+  [INK_OF_THE_SEA] = AZURE_PIGMENT,     --ink of the sea (azure pigment)
+  [SNOWFALL_INK]   = ICY_PIGMENT,       -- snowfall ink (icy pigment)
+}
+
+local pigmentsToInks = {
+  [ALABASTER_PIGMENT] = MOONGLOW_INK   , --moonglow ink (alabaster pigment)
+  [DUSKY_PIGMENT]     = MIDNIGHT_INK   , --midnight ink (dusky pigment)
+  [VERDANT_PIGMENT]   = HUNTERS_INK    , --hunter's ink (verdant pigment)
+  [GOLDEN_PIGMENT]    = LIONS_INK      , --lion's ink (golden pigment)
+  [BURNT_PIGMENT]     = DAWNSTAR_INK   , --dawnstar ink (burnt pigment)
+  [EMERALD_PIGMENT]   = JADEFIRE_INK   , --jadefire ink (emerald pigment)
+  [INDIGO_PIGMENT]    = ROYAL_INK      , --royal ink (indigo pigment)
+  [VIOLET_PIGMENT]    = CELESTIAL_INK  , --celestial ink (violet pigment)
+  [RUBY_PIGMENT]      = FIERY_INK      , --fiery ink (Ruby Pigment)
+  [SILVERY_PIGMENT]   = SHIMMERING_INK , --shimmering ink (silvery pigment)
+  [SAPPHIRE_PIGMENT]  = INK_OF_THE_SKY , --ink of the sky (Saphire Pigment)
+  [NETHER_PIGMENT]    = ETHEREAL_INK   , --ethereal ink (nether pigment)
+  [EBON_PIGMENT]      = DARKFLAME_INK  , --darkflame ink (ebon pigment)
+  [AZURE_PIGMENT]     = INK_OF_THE_SEA , --ink of the sea (azure pigment)
+  [ICY_PIGMENT]       = SNOWFALL_INK   , -- snowfall ink (icy pigment)
+}
+
+local pigmentCount = {
+  [MOONGLOW_INK]   = COMMON_INK, --moonglow ink (alabaster pigment)
+  [MIDNIGHT_INK]   = COMMON_INK, --midnight ink (dusky pigment)
+  [HUNTERS_INK]    = RARE_INK, --hunter's ink (verdant pigment)
+  [LIONS_INK]      = COMMON_INK, --lion's ink (golden pigment)
+  [DAWNSTAR_INK]   = RARE_INK, --dawnstar ink (burnt pigment)
+  [JADEFIRE_INK]   = COMMON_INK, --jadefire ink (emerald pigment)
+  [ROYAL_INK]      = RARE_INK, --royal ink (indigo pigment)
+  [CELESTIAL_INK]  = COMMON_INK, --celestial ink (violet pigment)
+  [FIERY_INK]      = RARE_INK, --fiery ink (Ruby Pigment)
+  [SHIMMERING_INK] = COMMON_INK, --shimmering ink (silvery pigment)
+  [INK_OF_THE_SKY] = RARE_INK, --ink of the sky (Saphire Pigment)
+  [ETHEREAL_INK]   = COMMON_INK, --ethereal ink (nether pigment)
+  [DARKFLAME_INK]  = RARE_INK, --darkflame ink (ebon pigment)
+  [INK_OF_THE_SEA] = COMMON_INK, --ink of the sea (azure pigment)
+  [SNOWFALL_INK]   = RARE_INK, -- snowfall ink (icy pigment)
+}
+
 -- a table we can check for item ids
 local validReagents =
-	{
---	[VOID] = true,
-     [ALABASTER_PIGMENT] = true,
-     [DUSKY_PIGMENT] = true,
-     [GOLDEN_PIGMENT] = true,
-     [EMERALD_PIGMENT] = true,
-     [VIOLET_PIGMENT] = true,
-     [SILVERY_PIGMENT] = true,
-     [NETHER_PIGMENT] = true,
-     [AZURE_PIGMENT] = true,
+{
+  --	[VOID] = true,
+  [ALABASTER_PIGMENT] = true,
+  [DUSKY_PIGMENT] = true,
+  [GOLDEN_PIGMENT] = true,
+  [EMERALD_PIGMENT] = true,
+  [VIOLET_PIGMENT] = true,
+  [SILVERY_PIGMENT] = true,
+  [NETHER_PIGMENT] = true,
+  [AZURE_PIGMENT] = true,
 
-     [VERDANT_PIGMENT] = true,
-     [BURNT_PIGMENT] = true,
-     [INDIGO_PIGMENT] = true,
-     [RUBY_PIGMENT] = true,
-     [SAPPHIRE_PIGMENT] = true,
-     [EBON_PIGMENT] = true,
-     [ICY_PIGMENT] = true,
+  [VERDANT_PIGMENT] = true,
+  [BURNT_PIGMENT] = true,
+  [INDIGO_PIGMENT] = true,
+  [RUBY_PIGMENT] = true,
+  [SAPPHIRE_PIGMENT] = true,
+  [EBON_PIGMENT] = true,
+  [ICY_PIGMENT] = true,
 
-     [HERB_PEACEBLOOM] = true,
-     [HERB_SILVERLEAF] = true,
-     [HERB_EARTHROOT] = true,
-     [HERB_MAGEROYAL] = true,
---     [HERB_BLOODTHISTLE] = true,		-- removed during beta
+  [HERB_PEACEBLOOM] = true,
+  [HERB_SILVERLEAF] = true,
+  [HERB_EARTHROOT] = true,
+  [HERB_MAGEROYAL] = true,
+  --     [HERB_BLOODTHISTLE] = true,		-- removed during beta
 
-     [HERB_BRIARTHORN] = true,
-     [HERB_SWIFTTHISTLE] = true,
-     [HERB_BRUISEWEED] = true,
-     [HERB_STRANGLEKELP] = true,
+  [HERB_BRIARTHORN] = true,
+  [HERB_SWIFTTHISTLE] = true,
+  [HERB_BRUISEWEED] = true,
+  [HERB_STRANGLEKELP] = true,
 
-     [HERB_WILDSTEELBLOOM] = true,
-     [HERB_GRAVEMOSS] = true,
-     [HERB_KINGSBLOOD] = true,
-     [HERB_LIFEROOT] = true,
+  [HERB_WILDSTEELBLOOM] = true,
+  [HERB_GRAVEMOSS] = true,
+  [HERB_KINGSBLOOD] = true,
+  [HERB_LIFEROOT] = true,
 
-     [HERB_FADELEAF] = true,
-     [HERB_GOLDTHORN] = true,
-     [HERB_WINTERSBITE] = true,
-     [HERB_KHADGARSWHISKER] = true,
+  [HERB_FADELEAF] = true,
+  [HERB_GOLDTHORN] = true,
+  [HERB_WINTERSBITE] = true,
+  [HERB_KHADGARSWHISKER] = true,
 
-     [HERB_FIREBLOOM] = true,
-     [HERB_GHOSTMUSHROOM] = true,
-     [HERB_ARTHASTEARS] = true,
-     [HERB_GROMSBLOOD] = true,
-     [HERB_BLINDWEED] = true,
-     [HERB_SUNGRASS] = true,
-     [HERB_PURPLELOTUS] = true,
+  [HERB_FIREBLOOM] = true,
+  [HERB_GHOSTMUSHROOM] = true,
+  [HERB_ARTHASTEARS] = true,
+  [HERB_GROMSBLOOD] = true,
+  [HERB_BLINDWEED] = true,
+  [HERB_SUNGRASS] = true,
+  [HERB_PURPLELOTUS] = true,
 
-     [HERB_ICECAP] = true,
-     [HERB_GOLDENSANSAM] = true,
-     [HERB_PLAGUEBLOOM] = true,
-     [HERB_DREAMFOIL] = true,
-     [HERB_MOUNTAINSILVERSAGE] = true,
+  [HERB_ICECAP] = true,
+  [HERB_GOLDENSANSAM] = true,
+  [HERB_PLAGUEBLOOM] = true,
+  [HERB_DREAMFOIL] = true,
+  [HERB_MOUNTAINSILVERSAGE] = true,
 
--- all BC herbs
-     [HERB_TEROCONE] = true,
-     [HERB_DREAMINGGLORY] = true,
-     [HERB_FELWEED] = true,
-     [HERB_RAGVEIL] = true,
-     [HERB_NIGHTMAREVINE] = true,
-     [HERB_MANATHISTLE] = true,
-     [HERB_NETHERBLOOM] = true,
-     [HERB_ANCIENTLICHEN] = true,
+  -- all BC herbs
+  [HERB_TEROCONE] = true,
+  [HERB_DREAMINGGLORY] = true,
+  [HERB_FELWEED] = true,
+  [HERB_RAGVEIL] = true,
+  [HERB_NIGHTMAREVINE] = true,
+  [HERB_MANATHISTLE] = true,
+  [HERB_NETHERBLOOM] = true,
+  [HERB_ANCIENTLICHEN] = true,
 
--- all northrend herbs?
-     [HERB_GOLDCLOVER] = true,
---     [HERB_CONSTRICTORGRASS] = true,		-- removed 3.0.8
-     [HERB_ADDERSTONGUE] = true,
-     [HERB_TIGERLILY] = true,
-     [HERB_LICHBLOOM] = true,
-     [HERB_ICETHORN] = true,
-     [HERB_TALANDRASROSE] = true,
-     [HERB_DEADNETTLE] = true,
-     [HERB_FIRESEED] = true,					-- milling added 3.0.8
-     [HERB_FIRELEAF] = true,					-- milling added 3.0.8
-	}
+  -- all northrend herbs?
+  [HERB_GOLDCLOVER] = true,
+  --     [HERB_CONSTRICTORGRASS] = true,		-- removed 3.0.8
+  [HERB_ADDERSTONGUE] = true,
+  [HERB_TIGERLILY] = true,
+  [HERB_LICHBLOOM] = true,
+  [HERB_ICETHORN] = true,
+  [HERB_TALANDRASROSE] = true,
+  [HERB_DEADNETTLE] = true,
+  [HERB_FIRESEED] = true,					-- milling added 3.0.8
+  [HERB_FIRELEAF] = true,					-- milling added 3.0.8
+
+  [MOONGLOW_INK]   = true,
+  [MIDNIGHT_INK]   = true,
+  [HUNTERS_INK]    = true,
+  [LIONS_INK]      = true,
+  [DAWNSTAR_INK]   = true,
+  [JADEFIRE_INK]   = true,
+  [ROYAL_INK]      = true,
+  [CELESTIAL_INK]  = true,
+  [FIERY_INK]      = true,
+  [SHIMMERING_INK] = true,
+  [INK_OF_THE_SKY] = true,
+  [ETHEREAL_INK]   = true,
+  [DARKFLAME_INK]  = true,
+  [INK_OF_THE_SEA] = true,
+  [SNOWFALL_INK]   = true,
+}
 
 -- Set our defaults
 default("millingmats.level.custom", false)
@@ -200,206 +289,239 @@ default("millingmats.maxprice", 10000000)
 default("millingmats.maxprice.enable", false)
 
 --Slider variables
-default("millingmats.PriceAdjust."..ALABASTER_PIGMENT, 100)
-default("millingmats.PriceAdjust."..DUSKY_PIGMENT, 100)
-default("millingmats.PriceAdjust."..GOLDEN_PIGMENT, 100)
-default("millingmats.PriceAdjust."..EMERALD_PIGMENT, 100)
-default("millingmats.PriceAdjust."..VIOLET_PIGMENT, 100)
-default("millingmats.PriceAdjust."..SILVERY_PIGMENT, 100)
-default("millingmats.PriceAdjust."..NETHER_PIGMENT, 100)
-default("millingmats.PriceAdjust."..AZURE_PIGMENT, 100)
+default("millingmats.PriceAdjust."..MOONGLOW_INK, 100)
+default("millingmats.PriceAdjust."..MIDNIGHT_INK, 100)
+default("millingmats.PriceAdjust."..LIONS_INK, 100)
+default("millingmats.PriceAdjust."..JADEFIRE_INK, 100)
+default("millingmats.PriceAdjust."..CELESTIAL_INK, 100)
+default("millingmats.PriceAdjust."..SHIMMERING_INK, 100)
+default("millingmats.PriceAdjust."..ETHEREAL_INK, 100)
+default("millingmats.PriceAdjust."..INK_OF_THE_SEA, 100)
 
-default("millingmats.PriceAdjust."..VERDANT_PIGMENT, 100)
-default("millingmats.PriceAdjust."..BURNT_PIGMENT, 100)
-default("millingmats.PriceAdjust."..INDIGO_PIGMENT, 100)
-default("millingmats.PriceAdjust."..RUBY_PIGMENT, 100)
-default("millingmats.PriceAdjust."..SAPPHIRE_PIGMENT, 100)
-default("millingmats.PriceAdjust."..EBON_PIGMENT, 100)
-default("millingmats.PriceAdjust."..ICY_PIGMENT, 100)
+-- uncommon inks
+default("millingmats.PriceAdjust."..HUNTERS_INK, 0)
+default("millingmats.PriceAdjust."..DAWNSTAR_INK, 0)
+default("millingmats.PriceAdjust."..ROYAL_INK, 0)
+default("millingmats.PriceAdjust."..FIERY_INK, 0)
+default("millingmats.PriceAdjust."..INK_OF_THE_SKY, 0)
+default("millingmats.PriceAdjust."..DARKFLAME_INK, 0)
+default("millingmats.PriceAdjust."..SNOWFALL_INK, 0)
 
 -- This function is automatically called when we need to create our search parameters
 function lib:MakeGuiConfig(gui)
-	-- Get our tab and populate it with our controls
-	local id = gui:AddTab(lib.tabname, "Searchers")
-	gui:MakeScrollable(id)
+  -- Get our tab and populate it with our controls
+  local id = gui:AddTab(lib.tabname, "Searchers")
+  gui:MakeScrollable(id)
 
-	-- Add the help
-	gui:AddSearcher("Milling Mats", "Search for items which will mill for you into given pigments (for levelling)", 100)
-	gui:AddHelp(id, "millingmats searcher",
-		"What does this searcher do?",
-		"This searcher provides the ability to search for items which will mill into the pigments you need to have in order to level your inscription skill. It is not a searcher meant for profit, but rather least cost for leveling.")
+  -- Add the help
+  gui:AddSearcher("Milling Mats", "Search for items which will mill for you into given pigments (for levelling)", 100)
+  gui:AddHelp(id, "millingmats searcher",
+  "What does this searcher do?",
+  "This searcher provides the ability to search for items which will mill into the pigments you need to have in order to level your inscription skill. It is not a searcher meant for profit, but rather least cost for leveling.")
 
-	if not (Enchantrix and Enchantrix.Storage) then
-		gui:AddControl(id, "Header",     0,   "Enchantrix not detected")
-		gui:AddControl(id, "Note",    0.3, 1, 290, 30,    "Enchantrix must be enabled to search with MillingMats")
-		return
-	end
+  if not (Enchantrix and Enchantrix.Storage) then
+	gui:AddControl(id, "Header",     0,   "Enchantrix not detected")
+	gui:AddControl(id, "Note",    0.3, 1, 290, 30,    "Enchantrix must be enabled to search with MillingMats")
+	return
+  end
 
-	gui:AddControl(id, "Header",     0,      "MillingMats search criteria")
+  gui:AddControl(id, "Header",     0,      "MillingMats search criteria")
 
-	local last = gui:GetLast(id)
+  local last = gui:GetLast(id)
 
-	gui:AddControl(id, "Checkbox",          0.42, 1, "millingmats.allow.bid", "Allow Bids")
-	gui:SetLast(id, last)
-	gui:AddControl(id, "Checkbox",          0.56, 1, "millingmats.allow.buy", "Allow Buyouts")
-	gui:AddControl(id, "Checkbox",          0.42, 1, "millingmats.maxprice.enable", "Enable individual maximum price:")
-	gui:AddTip(id, "Limit the maximum amount you want to spend with the MillingMats searcher")
-	gui:AddControl(id, "MoneyFramePinned",  0.42, 2, "millingmats.maxprice", 1, 99999999, "Maximum Price for MillingMats")
+  gui:AddControl(id, "Checkbox",          0.42, 1, "millingmats.allow.bid", "Allow Bids")
+  gui:SetLast(id, last)
+  gui:AddControl(id, "Checkbox",          0.56, 1, "millingmats.allow.buy", "Allow Buyouts")
+  gui:AddControl(id, "Checkbox",          0.42, 1, "millingmats.maxprice.enable", "Enable individual maximum price:")
+  gui:AddTip(id, "Limit the maximum amount you want to spend with the MillingMats searcher")
+  gui:AddControl(id, "MoneyFramePinned",  0.42, 2, "millingmats.maxprice", 1, 99999999, "Maximum Price for MillingMats")
 
-	gui:SetLast(id, last)
-	gui:AddControl(id, "Checkbox",          0, 1, "millingmats.level.custom", "Use custom inscription skill levels")
-	gui:AddControl(id, "Slider",            0, 2, "millingmats.level.min", 0, 450, 25, "Minimum skill: %s")
-	gui:AddControl(id, "Slider",            0, 2, "millingmats.level.max", 25, 450, 25, "Maximum skill: %s")
+  gui:SetLast(id, last)
+  gui:AddControl(id, "Checkbox",          0, 1, "millingmats.level.custom", "Use custom inscription skill levels")
+  gui:AddControl(id, "Slider",            0, 2, "millingmats.level.min", 0, 450, 25, "Minimum skill: %s")
+  gui:AddControl(id, "Slider",            0, 2, "millingmats.level.max", 25, 450, 25, "Maximum skill: %s")
 
-	-- aka "what percentage of market value am I willing to pay for this pigment"?
-	gui:AddControl(id, "Subhead",          0,    "Pigment Price Modification")
+  -- aka "what percentage of market value am I willing to pay for this pigment"?
+  gui:AddControl(id, "Subhead",          0,    "Pigment Price Modification")
 
-    gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..ALABASTER_PIGMENT, 0, 200, 1, "Alabaster Pigment (Ivory/Moonglow Ink) %s%%" )
-    gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..DUSKY_PIGMENT, 0, 200, 1, "Dusky Pigment (Midnight Ink) %s%%" )
-    gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..GOLDEN_PIGMENT, 0, 200, 1, "Golden Pigment (Lion's Ink) %s%%" )
-    gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..EMERALD_PIGMENT, 0, 200, 1, "Emerald Pigment (Jadefire Ink) %s%%" )
-    gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..VIOLET_PIGMENT, 0, 200, 1, "Violet Pigment (Celestial Ink) %s%%" )
-    gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..SILVERY_PIGMENT, 0, 200, 1, "Silvery Pigment (Shimmering Ink) %s%%" )
-    gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..NETHER_PIGMENT, 0, 200, 1, "Nether Pigment (Ethereal Ink) %s%%" )
-    gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..AZURE_PIGMENT, 0, 200, 1, "Azure Pigment (Ink of the Sea) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..MOONGLOW_INK, 0, 201, 1, "Alabaster Pigment (Ivory/Moonglow Ink) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..MIDNIGHT_INK, 0, 201, 1, "Dusky Pigment (Midnight Ink) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..LIONS_INK, 0, 201, 1, "Golden Pigment (Lion's Ink) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..JADEFIRE_INK, 0, 201, 1, "Emerald Pigment (Jadefire Ink) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..CELESTIAL_INK, 0, 201, 1, "Violet Pigment (Celestial Ink) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..SHIMMERING_INK, 0, 201, 1, "Silvery Pigment (Shimmering Ink) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..ETHEREAL_INK, 0, 201, 1, "Nether Pigment (Ethereal Ink) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..INK_OF_THE_SEA, 0, 201, 1, "Azure Pigment (Ink of the Sea) %s%%" )
 
-    gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..VERDANT_PIGMENT, 0, 200, 1, "Verdant Pigment (Hunter's Ink) %s%%" )
-    gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..BURNT_PIGMENT, 0, 200, 1, "Burnt Pigment (Dawnstar Ink) %s%%" )
-    gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..INDIGO_PIGMENT, 0, 200, 1, "Indigo Pigment (Royal Ink) %s%%" )
-    gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..RUBY_PIGMENT, 0, 200, 1, "Ruby Pigment (Fiery Ink) %s%%" )
-    gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..SAPPHIRE_PIGMENT, 0, 200, 1, "Sapphire Pigment (Ink of the Sky) %s%%" )
-    gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..EBON_PIGMENT, 0, 200, 1, "Ebon Pigment (Darkflame Ink) %s%%" )
-    gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..ICY_PIGMENT, 0, 200, 1, "Icy Pigment (Snowfall Ink) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..HUNTERS_INK, 0, 201, 1, "Verdant Pigment (Hunter's Ink) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..DAWNSTAR_INK, 0, 201, 1, "Burnt Pigment (Dawnstar Ink) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..ROYAL_INK, 0, 201, 1, "Indigo Pigment (Royal Ink) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..FIERY_INK, 0, 201, 1, "Ruby Pigment (Fiery Ink) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..INK_OF_THE_SKY, 0, 201, 1, "Sapphire Pigment (Ink of the Sky) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..DARKFLAME_INK, 0, 201, 1, "Ebon Pigment (Darkflame Ink) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..SNOWFALL_INK, 0, 201, 1, "Icy Pigment (Snowfall Ink) %s%%" )
 end
 
 function lib.Search(item)
-	local market, seen, _, curModel, pctstring
+  local market, seen, _, curModel, pctstring
 
-	-- Can't do anything without Enchantrix
-	if not (Enchantrix and Enchantrix.Storage) then
-		return false, "Enchantrix not detected"
-	end
+  -- Can't do anything without Enchantrix
+  if not (Enchantrix and Enchantrix.Storage) then
+	return false, "Enchantrix not detected"
+  end
 
-	local itemLink = item[Const.LINK]
-	if (not itemLink) then
-		return false, "No item link"
-	end
+  local itemLink = item[Const.LINK]
+  if (not itemLink) then
+	return false, "No item link"
+  end
 
-	local bidprice, buyprice = item[Const.PRICE], item[Const.BUYOUT]
+  local bidprice, buyprice = item[Const.PRICE], item[Const.BUYOUT]
 
-	local maxprice = get("millingmats.maxprice.enable") and get("millingmats.maxprice")
+  local maxprice = get("millingmats.maxprice.enable") and get("millingmats.maxprice")
 
-	if buyprice <= 0 or not get("millingmats.allow.buy") or (maxprice and buyprice > maxprice) then
-		buyprice = nil
-	end
-	if not get("millingmats.allow.bid") or (maxprice and bidprice > maxprice) then
-		bidprice = nil
-	end
-	if not (bidprice or buyprice) then
-		return false, "Does not meet bid/buy requirements"
-	end
+  if buyprice <= 0 or not get("millingmats.allow.buy") or (maxprice and buyprice > maxprice) then
+	buyprice = nil
+  end
+  if not get("millingmats.allow.bid") or (maxprice and bidprice > maxprice) then
+	bidprice = nil
+  end
+  if not (bidprice or buyprice) then
+	return false, "Does not meet bid/buy requirements"
+  end
 
-	-- first, is this an enchanting reagent itself?
-	-- if so, just use the value of the reagent
-	if validReagents[ Enchantrix.Util.GetItemIdFromLink(itemLink) ] then
-		-- be safe and handle nil results
-		local adjustment = get("millingmats.PriceAdjust."..Enchantrix.Util.GetItemIdFromLink(itemLink)) or 0
+  -- If we have an item we are interested in then we should process it
+  if validReagents[ Enchantrix.Util.GetItemIdFromLink(itemLink) ] then
 
-		-- return early if we aren't interested in this pigment
-		if (not adjustment or adjustment <= 0) then
-		--	return false, "Adjustment equal to 0"
+	local itemId = Enchantrix.Util.GetItemIdFromLink(itemLink)
+
+	local inks = {}
+
+	-- are we a herb?
+	-- 	convert to pigment 
+	-- 	add to ink table
+	if  ( Enchantrix.Storage.GetItemMilling(itemLink) ) then
+	  local pigments = Enchantrix.Storage.GetItemMilling(itemLink)
+
+	  if pigments then
+		for pigment, pigmentYield in pairs(pigments) do
+		  local ink = pigmentsToInks[pigment]
+
+		  local _, inkLink = GetItemInfo(ink)
+		  local _, pigmentLink = GetItemInfo(pigment)
+
+		  local stackNum = item[Const.COUNT] / 5 
+
+		  local pigmentNum = stackNum * pigmentYield
+
+		  local inkNum   = pigmentNum / pigmentCount[ink]
+
+		  inks[ink] = inkNum
+
+		  --		  inks[ink] = { 
+		  --					itemLink,
+		  --					'itemCount = ' .. item[Const.COUNT],
+		  --					'stackNum  = ' .. stackNum,
+		  --		  			pigmentLink,
+		  --					'pigmentYield = ' .. pigmentYield,
+		  --					'pigmentNum = '   .. pigmentNum,
+		  --					'pigmentPerInk = '.. pigmentCount[ink],
+		  --					inkLink,
+		  --					'inkNum = ' .. inkNum,
+		  --				  }
 		end
+	  end
 
-		market, _, _, seen, curModel = AucAdvanced.Modules.Util.Appraiser.GetPrice(itemLink)
-		if (not market or market <= 0) then
-			return false, "No appraiser price"
-		end
+	-- are we a pigment?
+	-- 	add to inks table
+	elseif  (pigmentsToInks[itemId]) then
+	  local ink = pigmentsToInks[itemId]
 
-		market = (market * item[Const.COUNT]) * (adjustment / 100)
+	  local _, inkLink = GetItemInfo(ink)
+	  local inkNum   = item[Const.COUNT] / pigmentCount[ink]
+
+	  inks[ink] = inkNum
+	  --	  inks[ink] = { 
+	  --		itemLink,
+	  --		'itemCount = ' .. item[Const.COUNT],
+	  --		'pigmentPerInk = '.. pigmentCount[ink],
+	  --		inkLink,
+	  --		'inkNum = ' .. inkNum,
+	  --	  }
+
+
+	-- are we the ink itself?
+	--    add to inks table
+	elseif (pigmentCount[itemId]) then
+	  local ink = itemId
+	  inks[ink] = item[Const.COUNT]
 	end
 
-	-- it's not a reagent, figure out what it mill's into
-	if (not market or market == 0) then
 
-		local minskill = 0
-		local maxskill = 450
-		if get("millingmats.level.custom") then
-			minskill = get("millingmats.level.min")
-			maxskill = get("millingmats.level.max")
-		else
-			maxskill = Enchantrix.Util.GetUserInscriptionSkill()
-		end
+	for inkId, num in pairs (inks) do
+	  local _, inkLink = GetItemInfo(inkId)
+	  print ( inkLink .. '=>' .. num)
+	  -- be safe and handle nil results
+	  local adjustment = get("millingmats.PriceAdjust."..inkId) or 0
 
-		local skillneeded = Enchantrix.Util.InscriptionSkillRequiredForItem(itemLink)
-		if (skillneeded < minskill) or (skillneeded > maxskill) then
-			return false, "Skill not high enough to Mill"
-		end
+	  if (not adjustment or adjustment <= 0) then
+		print ("not interested in" .. inkLink)
 
-		-- Give up if it doesn't mill to anything
-		local pigments = Enchantrix.Storage.GetItemMilling(itemLink)
-		if not pigments then
-			return false, "Item not Millable"
-		end
-
-		market = 0
-		for pigment, yield in pairs(pigments) do
-
-		    -- if we aren't interested in the Pigment, we might as well exit early
-			local adjustment = get("millingmats.PriceAdjust."..pigment) or 0
-
-			if ( adjustment <= 0 ) then
-				return false, "No Adjustment Found"
-			end
-
-			-- make an item out of this pigment string
-			local _, pigmentLink = GetItemInfo(pigment)
-
-			-- fetch value of each pigment from Enchantrix
-			local pigmentPrice, med, baseline, five = Enchantrix.Util.GetReagentPrice(pigment);
-
-			-- if no Auc4 price, use Auc5 price
-			if (not pigmentPrice) then
-				pigmentPrice = five
-			end
-
-			-- if still no price, get the buy price from Appraiser
-			if (not pigmentPrice) then
-				local newBuy, newBid, isFalse, seen, curModelText, MatchString, stack, number, duration = AucAdvanced.Modules.Util.Appraiser.GetPrice(pigmentLink) 
-				pigmentPrice = newBuy
-			end
-
-			-- still nothing, try the baseline (hard coded)
-			if (not pigmentPrice) then
-				pigmentPrice = baseline
-			end
-
-			local millingNum = 5
-			local totalYield = (item[Const.COUNT] / millingNum) * yield or 0;
-			local totalValue = totalYield * (pigmentPrice or 0)
-
-
-			-- market is 0 at this point or this mills into two pigments
-			market = market + ( totalValue * (adjustment / 100) ) ;
-
-			-- calculate deposit for each pigment
-			if includeDeposit then
-				local aadvdepcost = GetDepositCost(pigment, depositAucLength, depositFaction, nil) or 0
-				deposit = deposit + aadvdepcost * yield * depositRelistTimes
-			end
-		end
+		-- if we already have a market value for this (common pigment) use it otherwise assign it
+	  elseif ( not market ) then
+		market, _, _, seen, curModel = AucAdvanced.Modules.Util.Appraiser.GetPrice(inkLink)
+		market = (market * num) * (adjustment / 100)
+	  end 
 	end
 
-	-- If we don't know what it's worth, then there's not much we can do
-	if( not market or market <= 0) then
-		return false, "No Price Found"
+	if (not market or market <= 0) then
+	  print ("No appraiser price")
+	  return false, "No appraiser price"
 	end
 
-	if buyprice and buyprice <= market then
-		return "buy", market
-	elseif bidprice and bidprice <= market then
-		return "bid", market
-	end
-	return false, "Not enough profit"
+  else
+	--print ("Not an ink, pigment or herb")
+	return false, "Not an ink, pigment or herb" 
+  end
+
+  -- If we don't know what it's worth, then there's not much we can do
+  if( not market or market <= 0) then
+	print ("No Price Found")
+	return false, "No Price Found"
+  end
+
+  if buyprice and buyprice <= market then
+	print ("returning 1")
+	return "buy", market
+  elseif bidprice and bidprice <= market then
+	print ("returning 2")
+	return "bid", market
+  elseif adjustment and adjustment >= 201 then
+	print ("returning 3")
+	return "bid", market
+  end
+
+  return false, "Not enough profit"
+end
+
+-- Dump tables
+function print_r (t, indent, done)
+  done = done or {}
+  indent = indent or ''
+  local nextIndent -- Storage for next indentation value
+  for key, value in pairs (t) do
+    if type (value) == "table" and not done [value] then
+      nextIndent = nextIndent or
+          (indent .. string.rep(' ',string.len(tostring (key))+2))
+          -- Shortcut conditional allocation
+      done [value] = true
+      print (indent .. "[" .. tostring (key) .. "] => Table {");
+      print  (nextIndent .. "{");
+      print_r (value, nextIndent .. string.rep(' ',2), done)
+      print  (nextIndent .. "}");
+    else
+      print  (indent .. "[" .. tostring (key) .. "] => " .. tostring (value).."")
+    end
+  end
 end
 
 -- TOD0 determine where this will be going
