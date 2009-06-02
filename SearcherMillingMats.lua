@@ -363,7 +363,7 @@ function lib:MakeGuiConfig(gui)
 end
 
 function lib.Search(item)
-  local market, seen, _, curModel, pctstring
+  local market, seen, _, curModel, pctstring, adjMarket
 
   -- Can't do anything without Enchantrix
   if not (Enchantrix and Enchantrix.Storage) then
@@ -459,22 +459,24 @@ function lib.Search(item)
 
 	for inkId, num in pairs (inks) do
 	  local _, inkLink = GetItemInfo(inkId)
-	  print ( inkLink .. '=>' .. num)
+	  --print ( inkLink .. '=>' .. num)
 	  -- be safe and handle nil results
 	  local adjustment = get("millingmats.PriceAdjust."..inkId) or 0
 
 	  if (not adjustment or adjustment <= 0) then
-		print ("not interested in" .. inkLink)
+		--print ("not interested in" .. inkLink)
 
 		-- if we already have a market value for this (common pigment) use it otherwise assign it
 	  elseif ( not market ) then
 		market, _, _, seen, curModel = AucAdvanced.Modules.Util.Appraiser.GetPrice(inkLink)
-		market = (market * num) * (adjustment / 100)
+		market = (market * num) 
+		adjMarket = market * (adjustment / 100)
 	  end 
+
 	end
 
 	if (not market or market <= 0) then
-	  print ("No appraiser price")
+	  --print ("No appraiser price")
 	  return false, "No appraiser price"
 	end
 
@@ -489,11 +491,11 @@ function lib.Search(item)
 	return false, "No Price Found"
   end
 
-  if buyprice and buyprice <= market then
-	print ("returning 1")
+  if buyprice and ( buyprice / adjMarket ) <= 1 then
+	print ("returning 1", buyprice, adjMarket)
 	return "buy", market
-  elseif bidprice and bidprice <= market then
-	print ("returning 2")
+  elseif bidprice and (bidprice / adjMarket) > 1 then
+	print ("returning 2", bidprice, adjMarket)
 	return "bid", market
   elseif adjustment and adjustment >= 201 then
 	print ("returning 3")
