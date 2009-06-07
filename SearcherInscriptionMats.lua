@@ -1,5 +1,5 @@
 --[[
-Auctioneer Advanced - Search UI - Searcher MillingMats
+Auctioneer Advanced - Search UI - Searcher InscriptionMats
 TODO add revision and ID
 
 This is a plugin module for the SearchUI that assists in searching by refined paramaters
@@ -30,11 +30,11 @@ TODO: The market valuation and percentage calculations have not been validated.
 use at your own descretion.
 --]]
 -- Create a new instance of our lib with our parent
-local lib, parent, private = AucSearchUI.NewSearcher("MillingMats")
+local lib, parent, private = AucSearchUI.NewSearcher("InscriptionMats")
 if not lib then return end
 local print,decode,_,_,replicate,empty,_,_,_,debugPrint,fill = AucAdvanced.GetModuleLocals()
 local get,set,default,Const = AucSearchUI.GetSearchLocals()
-lib.tabname = "MillingMats"
+lib.tabname = "InscriptionMats"
 
 -- Milling reagents, from Enchantrix EnxConstants.lua
 local ALABASTER_PIGMENT = 39151
@@ -280,32 +280,32 @@ local validReagents =
 }
 
 -- Set our defaults
-default("millingmats.level.custom", false)
-default("millingmats.level.min", 0)
-default("millingmats.level.max", 450)
-default("millingmats.allow.bid", true)
-default("millingmats.allow.buy", true)
-default("millingmats.maxprice", 10000000)
-default("millingmats.maxprice.enable", false)
+default("inscriptionmats.level.custom", false)
+default("inscriptionmats.level.min", 0)
+default("inscriptionmats.level.max", 450)
+default("inscriptionmats.allow.bid", true)
+default("inscriptionmats.allow.buy", true)
+default("inscriptionmats.maxprice", 10000000)
+default("inscriptionmats.maxprice.enable", false)
 
 --Slider variables
-default("millingmats.PriceAdjust."..MOONGLOW_INK, 100)
-default("millingmats.PriceAdjust."..MIDNIGHT_INK, 100)
-default("millingmats.PriceAdjust."..LIONS_INK, 100)
-default("millingmats.PriceAdjust."..JADEFIRE_INK, 100)
-default("millingmats.PriceAdjust."..CELESTIAL_INK, 100)
-default("millingmats.PriceAdjust."..SHIMMERING_INK, 100)
-default("millingmats.PriceAdjust."..ETHEREAL_INK, 100)
-default("millingmats.PriceAdjust."..INK_OF_THE_SEA, 100)
+default("inscriptionmats.PriceAdjust."..MOONGLOW_INK, 100)
+default("inscriptionmats.PriceAdjust."..MIDNIGHT_INK, 100)
+default("inscriptionmats.PriceAdjust."..LIONS_INK, 100)
+default("inscriptionmats.PriceAdjust."..JADEFIRE_INK, 100)
+default("inscriptionmats.PriceAdjust."..CELESTIAL_INK, 100)
+default("inscriptionmats.PriceAdjust."..SHIMMERING_INK, 100)
+default("inscriptionmats.PriceAdjust."..ETHEREAL_INK, 100)
+default("inscriptionmats.PriceAdjust."..INK_OF_THE_SEA, 100)
 
 -- uncommon inks
-default("millingmats.PriceAdjust."..HUNTERS_INK, 0)
-default("millingmats.PriceAdjust."..DAWNSTAR_INK, 0)
-default("millingmats.PriceAdjust."..ROYAL_INK, 0)
-default("millingmats.PriceAdjust."..FIERY_INK, 0)
-default("millingmats.PriceAdjust."..INK_OF_THE_SKY, 0)
-default("millingmats.PriceAdjust."..DARKFLAME_INK, 0)
-default("millingmats.PriceAdjust."..SNOWFALL_INK, 0)
+default("inscriptionmats.PriceAdjust."..HUNTERS_INK, 0)
+default("inscriptionmats.PriceAdjust."..DAWNSTAR_INK, 0)
+default("inscriptionmats.PriceAdjust."..ROYAL_INK, 0)
+default("inscriptionmats.PriceAdjust."..FIERY_INK, 0)
+default("inscriptionmats.PriceAdjust."..INK_OF_THE_SKY, 0)
+default("inscriptionmats.PriceAdjust."..DARKFLAME_INK, 0)
+default("inscriptionmats.PriceAdjust."..SNOWFALL_INK, 0)
 
 -- This function is automatically called when we need to create our search parameters
 function lib:MakeGuiConfig(gui)
@@ -314,52 +314,52 @@ function lib:MakeGuiConfig(gui)
   gui:MakeScrollable(id)
 
   -- Add the help
-  gui:AddSearcher("Milling Mats", "Search for items which will mill for you into given pigments (for levelling)", 100)
-  gui:AddHelp(id, "millingmats searcher",
+  gui:AddSearcher("Inscription Mats", "Search for items which will provide ink (mill/pigment/ink) for levelling", 100)
+  gui:AddHelp(id, "inscriptionmats searcher",
   "What does this searcher do?",
   "This searcher provides the ability to search for items which will mill into the pigments you need to have in order to level your inscription skill. It is not a searcher meant for profit, but rather least cost for leveling.")
 
   if not (Enchantrix and Enchantrix.Storage) then
 	gui:AddControl(id, "Header",     0,   "Enchantrix not detected")
-	gui:AddControl(id, "Note",    0.3, 1, 290, 30,    "Enchantrix must be enabled to search with MillingMats")
+	gui:AddControl(id, "Note",    0.3, 1, 290, 30,    "Enchantrix must be enabled to search with InscriptionMats")
 	return
   end
 
-  gui:AddControl(id, "Header",     0,      "MillingMats search criteria")
+  gui:AddControl(id, "Header",     0,      "InscriptionMats search criteria")
 
   local last = gui:GetLast(id)
 
-  gui:AddControl(id, "Checkbox",          0.42, 1, "millingmats.allow.bid", "Allow Bids")
+  gui:AddControl(id, "Checkbox",          0.42, 1, "inscriptionmats.allow.bid", "Allow Bids")
   gui:SetLast(id, last)
-  gui:AddControl(id, "Checkbox",          0.56, 1, "millingmats.allow.buy", "Allow Buyouts")
-  gui:AddControl(id, "Checkbox",          0.42, 1, "millingmats.maxprice.enable", "Enable individual maximum price:")
-  gui:AddTip(id, "Limit the maximum amount you want to spend with the MillingMats searcher")
-  gui:AddControl(id, "MoneyFramePinned",  0.42, 2, "millingmats.maxprice", 1, 99999999, "Maximum Price for MillingMats")
+  gui:AddControl(id, "Checkbox",          0.56, 1, "inscriptionmats.allow.buy", "Allow Buyouts")
+  gui:AddControl(id, "Checkbox",          0.42, 1, "inscriptionmats.maxprice.enable", "Enable individual maximum price:")
+  gui:AddTip(id, "Limit the maximum amount you want to spend with the InscriptionMats searcher")
+  gui:AddControl(id, "MoneyFramePinned",  0.42, 2, "inscriptionmats.maxprice", 1, 99999999, "Maximum Price for InscriptionMats")
 
   gui:SetLast(id, last)
-  gui:AddControl(id, "Checkbox",          0, 1, "millingmats.level.custom", "Use custom inscription skill levels")
-  gui:AddControl(id, "Slider",            0, 2, "millingmats.level.min", 0, 450, 25, "Minimum skill: %s")
-  gui:AddControl(id, "Slider",            0, 2, "millingmats.level.max", 25, 450, 25, "Maximum skill: %s")
+  gui:AddControl(id, "Checkbox",          0, 1, "inscriptionmats.level.custom", "Use custom inscription skill levels")
+  gui:AddControl(id, "Slider",            0, 2, "inscriptionmats.level.min", 0, 450, 25, "Minimum skill: %s")
+  gui:AddControl(id, "Slider",            0, 2, "inscriptionmats.level.max", 25, 450, 25, "Maximum skill: %s")
 
   -- aka "what percentage of market value am I willing to pay for this pigment"?
   gui:AddControl(id, "Subhead",          0,    "Pigment Price Modification")
 
-  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..MOONGLOW_INK, 0, 201, 1, "Alabaster Pigment (Ivory/Moonglow Ink) %s%%" )
-  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..MIDNIGHT_INK, 0, 201, 1, "Dusky Pigment (Midnight Ink) %s%%" )
-  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..LIONS_INK, 0, 201, 1, "Golden Pigment (Lion's Ink) %s%%" )
-  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..JADEFIRE_INK, 0, 201, 1, "Emerald Pigment (Jadefire Ink) %s%%" )
-  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..CELESTIAL_INK, 0, 201, 1, "Violet Pigment (Celestial Ink) %s%%" )
-  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..SHIMMERING_INK, 0, 201, 1, "Silvery Pigment (Shimmering Ink) %s%%" )
-  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..ETHEREAL_INK, 0, 201, 1, "Nether Pigment (Ethereal Ink) %s%%" )
-  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..INK_OF_THE_SEA, 0, 201, 1, "Azure Pigment (Ink of the Sea) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "inscriptionmats.PriceAdjust."..MOONGLOW_INK, 0, 201, 1, "Ivory/Moonglow Ink (Alabaster Pigment) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "inscriptionmats.PriceAdjust."..MIDNIGHT_INK, 0, 201, 1, "Midnight Ink (Dusky Pigment) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "inscriptionmats.PriceAdjust."..LIONS_INK, 0, 201, 1, "Lion's Ink (Golden Pigment) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "inscriptionmats.PriceAdjust."..JADEFIRE_INK, 0, 201, 1, "Jadefire Ink (Emerald Pigment) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "inscriptionmats.PriceAdjust."..CELESTIAL_INK, 0, 201, 1, "Celestial Ink (Violet Pigment) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "inscriptionmats.PriceAdjust."..SHIMMERING_INK, 0, 201, 1, "Shimmering Ink (Silvery Pigment) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "inscriptionmats.PriceAdjust."..ETHEREAL_INK, 0, 201, 1, "Ethereal Ink (Nether Pigment) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "inscriptionmats.PriceAdjust."..INK_OF_THE_SEA, 0, 201, 1, "Ink of the Sea (Azure Pigment) %s%%" )
 
-  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..HUNTERS_INK, 0, 201, 1, "Verdant Pigment (Hunter's Ink) %s%%" )
-  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..DAWNSTAR_INK, 0, 201, 1, "Burnt Pigment (Dawnstar Ink) %s%%" )
-  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..ROYAL_INK, 0, 201, 1, "Indigo Pigment (Royal Ink) %s%%" )
-  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..FIERY_INK, 0, 201, 1, "Ruby Pigment (Fiery Ink) %s%%" )
-  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..INK_OF_THE_SKY, 0, 201, 1, "Sapphire Pigment (Ink of the Sky) %s%%" )
-  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..DARKFLAME_INK, 0, 201, 1, "Ebon Pigment (Darkflame Ink) %s%%" )
-  gui:AddControl(id, "WideSlider", 0, 1, "millingmats.PriceAdjust."..SNOWFALL_INK, 0, 201, 1, "Icy Pigment (Snowfall Ink) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "inscriptionmats.PriceAdjust."..HUNTERS_INK, 0, 201, 1, "Hunter's Ink (Verdant Pigment) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "inscriptionmats.PriceAdjust."..DAWNSTAR_INK, 0, 201, 1, "Dawnstar Ink (Burnt Pigment) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "inscriptionmats.PriceAdjust."..ROYAL_INK, 0, 201, 1, "Royal Ink (Indigo Pigment) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "inscriptionmats.PriceAdjust."..FIERY_INK, 0, 201, 1, "Fiery Ink (Ruby Pigment) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "inscriptionmats.PriceAdjust."..INK_OF_THE_SKY, 0, 201, 1, "Ink of the Sky (Sapphire Pigment) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "inscriptionmats.PriceAdjust."..DARKFLAME_INK, 0, 201, 1, "Darkflame Ink (Ebon Pigment) %s%%" )
+  gui:AddControl(id, "WideSlider", 0, 1, "inscriptionmats.PriceAdjust."..SNOWFALL_INK, 0, 201, 1, "Snowfall Ink (Icy Pigment) %s%%" )
 end
 
 function lib.Search(item)
@@ -377,12 +377,12 @@ function lib.Search(item)
 
   local bidprice, buyprice = item[Const.PRICE], item[Const.BUYOUT]
 
-  local maxprice = get("millingmats.maxprice.enable") and get("millingmats.maxprice")
+  local maxprice = get("inscriptionmats.maxprice.enable") and get("inscriptionmats.maxprice")
 
-  if buyprice <= 0 or not get("millingmats.allow.buy") or (maxprice and buyprice > maxprice) then
+  if buyprice <= 0 or not get("inscriptionmats.allow.buy") or (maxprice and buyprice > maxprice) then
 	buyprice = nil
   end
-  if not get("millingmats.allow.bid") or (maxprice and bidprice > maxprice) then
+  if not get("inscriptionmats.allow.bid") or (maxprice and bidprice > maxprice) then
 	bidprice = nil
   end
   if not (bidprice or buyprice) then
@@ -461,7 +461,7 @@ function lib.Search(item)
 	  local _, inkLink = GetItemInfo(inkId)
 	  --print ( inkLink .. '=>' .. num)
 	  -- be safe and handle nil results
-	  local adjustment = get("millingmats.PriceAdjust."..inkId) or 0
+	  local adjustment = get("inscriptionmats.PriceAdjust."..inkId) or 0
 
 	  if (not adjustment or adjustment <= 0) then
 		--print ("not interested in" .. inkLink)
@@ -527,4 +527,4 @@ function print_r (t, indent, done)
 end
 
 -- TOD0 determine where this will be going
---AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.4/Auc-Util-SearchUI/SearcherMillingMats.lua $", "$Rev: 3953 $")
+--AucAdvanced.RegisterRevision("$URL: http://svn.norganna.org/auctioneer/branches/5.4/Auc-Util-SearchUI/SearcherInscriptionMats.lua $", "$Rev: 3953 $")
