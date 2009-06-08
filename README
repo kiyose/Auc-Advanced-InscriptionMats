@@ -2,3 +2,12 @@ Based on EnchantMats and MillingMats
 by kiyose 
 
 TODO: Validate the market valuation and percent calculations. 
+
+INSTALL:
+
+download the file to
+Interface/AddOns/Auc-Advanced/Modules/Auc-Util-SearchUI/SearcherInscriptionMats.lua
+
+Add this line to your Auc-Advanced/Modules/Auc-Util-SearchUI/Embed.xml
+
+<Script file="SearcherInscriptionMats.lua"/>
